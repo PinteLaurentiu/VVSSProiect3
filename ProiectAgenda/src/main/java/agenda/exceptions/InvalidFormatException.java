@@ -1,6 +1,6 @@
 package agenda.exceptions;
 
-public class InvalidFormatException extends Exception{
+public class InvalidFormatException extends RuntimeException {
 	private static final long serialVersionUID = -6262759468431626763L;
 
 	public InvalidFormatException(String msg)
