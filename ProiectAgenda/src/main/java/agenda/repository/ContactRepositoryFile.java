@@ -33,12 +33,13 @@ public class ContactRepositoryFile extends ContactRepositoryMock implements ICon
 	}
 
 	private static String toString(Contact contact) {
-		return contact.getId() + "#" + contact.getName() + "#" + contact.getAddress() + "#" + contact.getPhone();
+		return contact.getId() + "#" + contact.getName() + "#" + contact.getAddress() + "#" + contact.getPhone() +
+				"#" + contact.getEmail();
 	}
 
 	private static Contact fromString(String line) {
 		String[] split = line.split("#");
-		if (split.length != 4) {
+		if (split.length != 5) {
 			throw new InvalidFormatException("Cannot convert", "Invalid data length");
 		}
 
@@ -50,6 +51,6 @@ public class ContactRepositoryFile extends ContactRepositoryMock implements ICon
 			throw new InvalidFormatException("Cannot convert", "Invalid id");
 		}
 
-		return new Contact(id, split[0], split[1], split[2]);
+		return new Contact(id, split[1], split[2], split[3], split[4]);
 	}
 }

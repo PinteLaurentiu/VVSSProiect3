@@ -35,9 +35,9 @@ public class Service {
         return true;
     }
 
-    public void addContact(String name, String address, String phone) {
+    public void addContact(String name, String address, String phone, String email) {
         User user = useCurrentUser();
-        Contact contact = new Contact(contactRepository.getNewId(), name, address, phone);
+        Contact contact = new Contact(contactRepository.getNewId(), name, address, phone, email);
         contactRepository.addContact(contact);
         user.getContacts().add(contact);
         userRepository.update(user);

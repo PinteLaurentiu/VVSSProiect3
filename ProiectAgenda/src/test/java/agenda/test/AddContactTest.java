@@ -1,75 +1,140 @@
-//package agenda.test;
-//
-//import static org.junit.Assert.*;
-//
-//import org.junit.Before;
-//import org.junit.Test;
-//
-//import agenda.exceptions.InvalidFormatException;
-//
-//import agenda.model.base.Contact;
-//import agenda.repository.classes.ContactRepositoryMock;
-//import agenda.repository.interfaces.IContactRepository;
-//
-//
-//public class AddContactTest {
-//
-//	private Contact con;
-//	private IContactRepository rep;
-//
-//	@Before
-//	public void setUp() throws Exception {
-//		rep = new ContactRepositoryMock();
-//	}
-//
-//	@Test
-//	public void testCase1()
-//	{
-//		try {
-//			con = new Contact("name", "address1", "+4071122334455");
-//		} catch (InvalidFormatException e) {
-//			assertTrue(false);
-//		}
-//		//int n = rep.count();
-//		rep.addContact(con);
-//		for(Contact c : rep.getContacts())
-//			if (c.equals(con))
-//			{
-//				assertTrue(true);
-//				break;
-//			}
-//		//assertTrue(n+1 == rep.count());
-//	}
-//
-//	@Test
-//	public void testCase2()
-//	{
-//		try{
-//			rep.addContact((Contact) new Object());
-//		}
-//		catch(Exception e)
-//		{
-//			assertTrue(true);
-//		}
-//	}
-//
-//	@Test
-//	public void testCase3()
-//	{
-//		for(Contact c : rep.getContacts())
-//			rep.removeContact(c);
-//
-//		try {
-//			con = new Contact("name", "address1", "+071122334455");
-//			rep.addContact(con);
-//		} catch (InvalidFormatException e) {
-//			assertTrue(false);
-//		}
-//		int n  = rep.count();
-//		if (n == 1)
-//			if (con.equals(rep.getContacts().get(0))) assertTrue(true);
-//			else assertTrue(false);
-//		else assertTrue(false);
-//	}
-//
-//}
+package agenda.test;
+
+import agenda.exceptions.InvalidFormatException;
+import agenda.model.User;
+import agenda.repository.ActivityRepositoryMock;
+import agenda.repository.ContactRepositoryMock;
+import agenda.repository.UserRepositoryMock;
+import agenda.repository.interfaces.IActivityRepository;
+import agenda.repository.interfaces.IContactRepository;
+import agenda.repository.interfaces.IUserRepository;
+import agenda.service.Service;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class AddContactTest {
+	private Service service;
+	private final static String validAddress = "test";
+	private final static String validPhone = "07";
+	private final static String validName = "test";
+	private final static String validEmail = "test";
+
+	@Before
+	public void setUp() {
+        IContactRepository contactRepository = new ContactRepositoryMock();
+        IActivityRepository activityRepository = new ActivityRepositoryMock();
+        IUserRepository userRepository = new UserRepositoryMock();
+        userRepository.add(new User("test",
+                "test",
+                "test",
+                null,
+                null));
+        service = new Service(userRepository, activityRepository, contactRepository);
+	    service.login("test", "test");
+	}
+
+	@Test
+	public void testCase1() {
+	    try {
+            service.addContact(null, validAddress, validPhone, validEmail);
+            Assert.fail();
+	    } catch (NullPointerException ignored) {
+            Assert.assertEquals(0, service.getContacts().size());
+        }
+	}
+
+    @Test
+    public void testCase2() {
+	    service.addContact("test", validAddress, validPhone, validEmail);
+        Assert.assertEquals("test", service.getContacts().get(0).getName());
+	}
+
+    @Test
+    public void testCase3() {
+        try {
+            service.addContact("test test test", validAddress, validPhone, validEmail);
+            Assert.fail();
+        } catch (InvalidFormatException ignored) {
+            Assert.assertEquals(0, service.getContacts().size());
+        }
+    }
+
+    @Test
+    public void testCase4() {
+        try {
+            service.addContact(validName, validAddress, null, validEmail);
+            Assert.fail();
+        } catch (NullPointerException ignored) {
+            Assert.assertEquals(0, service.getContacts().size());
+        }
+    }
+
+    @Test
+    public void testCase5() {
+        service.addContact(validName, validAddress, "+40 7", validEmail);
+        Assert.assertEquals("+40 7", service.getContacts().get(0).getPhone());
+    }
+
+    @Test
+    public void testCase6() {
+        service.addContact(validName, validAddress, "07", validEmail);
+        Assert.assertEquals("07", service.getContacts().get(0).getPhone());
+    }
+
+    @Test
+    public void testCase7() {
+        try {
+            service.addContact(validName, validAddress, "07 6", validEmail);
+            Assert.fail();
+        } catch (InvalidFormatException ignored) {
+            Assert.assertEquals(0, service.getContacts().size());
+        }
+    }
+
+    @Test
+    public void testCase8() {
+        try {
+            service.addContact(validName, validAddress, "7", validEmail);
+            Assert.fail();
+        } catch (InvalidFormatException ignored) {
+            Assert.assertEquals(0, service.getContacts().size());
+        }
+    }
+
+    @Test
+    public void testCase9() {
+        try {
+            service.addContact(validName, validAddress, "+40", validEmail);
+            Assert.fail();
+        } catch (InvalidFormatException ignored) {
+            Assert.assertEquals(0, service.getContacts().size());
+        }
+    }
+
+    @Test
+    public void testCase10() {
+        try {
+            service.addContact(validName, validAddress, "+40 74 56", validEmail);
+            Assert.fail();
+        } catch (InvalidFormatException ignored) {
+            Assert.assertEquals(0, service.getContacts().size());
+        }
+    }
+
+    @Test
+    public void testCase11() {
+        service.addContact("test test", validAddress, validPhone, validEmail);
+        Assert.assertEquals("test test", service.getContacts().get(0).getName());
+    }
+
+    @Test
+    public void testCase12() {
+        try {
+            service.addContact(validName, validAddress, null, validEmail);
+            Assert.fail();
+        } catch (NullPointerException ignored) {
+            Assert.assertEquals(0, service.getContacts().size());
+        }
+    }
+}

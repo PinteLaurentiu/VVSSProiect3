@@ -245,8 +245,10 @@ public class Console {
         String address = scanner.nextLine();
         System.out.print("Phone: ");
         String phone = scanner.nextLine();
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
         try {
-            service.addContact(name,address,phone);
+            service.addContact(name,address,phone,email);
             System.out.println("Contact added!");
         } catch (Exception e) {
             System.out.println("Adding contact failed");

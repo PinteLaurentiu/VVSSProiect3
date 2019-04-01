@@ -14,7 +14,7 @@ public class ContactValidator {
     }
 
     public static boolean isValidPhone(String tel) {
-        String[] s = tel.split("[\\p{Punct}\\s]+");
+        String[] s = tel.split("[!\"#$%&'()*,\\-./:;<=>?@\\[\\]\\\\^_`{|}~\\s]+");
         if (tel.charAt(0) == '+' && s.length == 2 ) {
             return true;
         }
@@ -24,4 +24,7 @@ public class ContactValidator {
         return s.length == 1;
     }
 
+    public static boolean isValidEmail(String email) {
+        return email.length() >= 1;
+    }
 }

@@ -8,12 +8,20 @@ public class Contact {
 	private String name;
 	private String address;
 	private String phone;
+	private String email;
 
-	public Contact(Long id, String name, String address, String phone) {
+	public Contact(Long id, String name, String address, String phone, String email) {
 		setId(id);
 		setName(name);
 		setAddress(address);
 		setPhone(phone);
+		setEmail(email);
+	}
+
+	private void setEmail(String email) {
+		if (!ContactValidator.isValidEmail(email))
+			throw new InvalidFormatException("Cannot convert", "Invalid email");
+		this.email = email;
 	}
 
 	public Long getId() {
@@ -60,7 +68,8 @@ public class Contact {
     public String toString() {
         return "name='" + name + '\'' +
 				"address='" + address + '\'' +
-                "phone=" + phone;
+                "phone=" + phone +
+				"email='" + email + '\'';
     }
 
     @Override
@@ -69,5 +78,9 @@ public class Contact {
 			return false;
 		Contact o = (Contact)obj;
 		return o.id.equals(id);
+	}
+
+	public String getEmail() {
+		return email;
 	}
 }
