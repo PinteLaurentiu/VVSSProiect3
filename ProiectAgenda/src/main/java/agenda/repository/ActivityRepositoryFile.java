@@ -45,43 +45,43 @@ public class ActivityRepositoryFile extends ActivityRepositoryMock implements IA
     }
 
 	private static Activity fromString(String line, IContactRepository contactRepository) {
-		String[] split = line.split("#");
-		if (split.length < 4 || split.length > 6) {
-			throw new InvalidFormatException("Cannot convert", "Invalid data");
+		String[] split = line.split("#"); // c1
+		if (split.length < 4 || split.length > 6) { // r2
+			throw new InvalidFormatException("Cannot convert", "Invalid data"); //c3
 		}
 
-		Long id;
+		Long id;//c4
 		try {
-			id = Long.valueOf(split[0]);
+			id = Long.valueOf(split[0]);//r5
 		} catch (NumberFormatException e) {
-			throw new InvalidFormatException("Cannot convert", "Invalid id");
+			throw new InvalidFormatException("Cannot convert", "Invalid id");//c6
 		}
 
-		Date start;
+		Date start;//c7
 		try {
-			start = new Date(Long.valueOf(split[2]));
+			start = new Date(Long.valueOf(split[2]));//r8
 		} catch (NumberFormatException e) {
-			throw new InvalidFormatException("Cannot convert", "Invalid start");
+			throw new InvalidFormatException("Cannot convert", "Invalid start");//c9
 		}
 
-		Long duration;
+		Long duration;//c10
 		try {
-			duration = Long.valueOf(split[3]);
+			duration = Long.valueOf(split[3]);//r11
 		} catch (NumberFormatException e) {
-			throw new InvalidFormatException("Cannot convert", "Invalid duration");
+			throw new InvalidFormatException("Cannot convert", "Invalid duration");//c12
 		}
 
-		List<Contact> contacts = new ArrayList<>();
-		if (split.length == 6) {
-			for (String contactId : split[5].split(",")) {
+		List<Contact> contacts = new ArrayList<>();//c13
+		if (split.length == 6) { //r14
+			for (String contactId : split[5].split(",")) { //r15
 				try {
-					Contact contact = contactRepository.get(Long.valueOf(contactId));
-					if (contact != null)
-						contacts.add(contact);
+					Contact contact = contactRepository.get(Long.valueOf(contactId));//r16
+					if (contact != null)//r17
+						contacts.add(contact);//c18
 				} catch (NumberFormatException ignored) {
 				}
 			}
 		}
-		return new Activity(id, split[1], start, duration, split.length > 4 ? split[4] : "", contacts);
+		return new Activity(id, split[1], start, duration, split.length > 4 ? split[4] : "", contacts);//r19, c20, c21
 	}
 }
